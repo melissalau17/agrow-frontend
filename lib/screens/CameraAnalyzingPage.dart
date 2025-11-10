@@ -1,0 +1,97 @@
+import 'package:flutter/material.dart';
+import 'AnalysisResultsPage.dart';
+
+class AnalyzingPage extends StatefulWidget {
+  final String capturedImageUrl;
+
+  const AnalyzingPage({super.key, required this.capturedImageUrl});
+
+  @override
+  State<AnalyzingPage> createState() => _AnalyzingPageState();
+}
+
+class _AnalyzingPageState extends State<AnalyzingPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Simulate AI analysis delay and then navigate to results
+    _startAnalysis();
+  }
+
+  Future<void> _startAnalysis() async {
+    await Future.delayed(const Duration(seconds: 3)); // Simulate 3 seconds of analysis
+    if (mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => AnalysisResultsPage(
+            analyzedImageUrl: widget.capturedImageUrl,
+            cropHealthPercentage: 87, // Example data
+            recommendations: const [
+              "Make sure to water the plant daily to maintain its quality.",
+              "Make sure the nutrients are adequate to ensure growth.",
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF4FAF0), // Light background
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 150,
+              height: 250,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.network(
+                  widget.capturedImageUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            // The green circular loading indicator from Image 2
+            const SizedBox(
+              width: 30,
+              height: 30,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF00A550)),
+                strokeWidth: 3,
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Analyzing...',
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
