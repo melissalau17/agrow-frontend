@@ -3,10 +3,10 @@ import 'package:intl/intl.dart';
 
 // Import necessary local components and pages for navigation
 import '/widgets/bottom_nav.dart';
-import 'MyFields.dart';
-import 'CameraPage.dart';
-import 'ControlsDetailPage.dart';
-import 'AddFieldPage.dart';
+import 'my_fields.dart';
+import 'camera_page.dart';
+import 'controls_detail_page.dart';
+import 'add_field_page.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});

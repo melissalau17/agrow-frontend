@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:agrow/screens/AddFieldPage.dart';
+import 'package:agrow/screens/add_field_page.dart';
 
 void navigateToFieldDetails(BuildContext context, String fieldName) {
   ScaffoldMessenger.of(context).showSnackBar(

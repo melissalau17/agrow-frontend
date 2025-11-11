@@ -4,7 +4,7 @@ class Task {
   final String title;
   final TimeOfDay startTime;
   final TimeOfDay endTime;
-  final String mode; 
+  final String mode;
   final bool isCompleted;
 
   Task({
@@ -27,31 +27,31 @@ class _AddTaskPageState extends State<AddTaskPage> {
   final TextEditingController _taskController = TextEditingController();
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
-  String _mode = 'Manual'; // Default mode
-  bool _isTaskCompleted = false; // For the checklist simulation
+  String _mode = 'Manual';
+  bool _isTaskCompleted = false;
 
-  // --- Time Picker Logic ---
   Future<void> _selectTime(BuildContext context, bool isStart) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: isStart ? (_startTime ?? TimeOfDay.now()) : (_endTime ?? _startTime ?? TimeOfDay.now()),
+      initialTime: isStart
+          ? (_startTime ?? TimeOfDay.now())
+          : (_endTime ?? _startTime ?? TimeOfDay.now()),
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF00A550), // Green accent color
-            ),
+            colorScheme: const ColorScheme.light(primary: Color(0xFF00A550)),
           ),
           child: child!,
         );
       },
     );
 
+    if (!mounted) return;
+
     if (picked != null) {
       setState(() {
         if (isStart) {
           _startTime = picked;
-          // Ensure end time is later than start time if both are set
           if (_endTime != null && _startTime!.hour > _endTime!.hour) {
             _endTime = null;
           }
@@ -62,11 +62,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
     }
   }
 
-  // --- Save Logic ---
   void _saveTask() {
-    if (_taskController.text.isEmpty || _startTime == null || _endTime == null) {
+    if (_taskController.text.isEmpty ||
+        _startTime == null ||
+        _endTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill out all fields and select a time interval.')),
+        const SnackBar(
+          content: Text(
+            'Please fill out all fields and select a time interval.',
+          ),
+        ),
       );
       return;
     }
@@ -90,7 +95,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
   // --- Widget Builders ---
 
   Widget _buildModePill(String mode, bool isSelected) {
-    final color = mode == 'Automated' ? const Color(0xFF00A550) : Colors.grey.shade400;
+    final color = mode == 'Automated'
+        ? const Color(0xFF00A550)
+        : Colors.grey.shade400;
 
     return GestureDetector(
       onTap: () {
@@ -164,15 +171,46 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 children: [
                   Row(
                     children: const [
-                      SizedBox(width: 40, child: Text("")), // Align with Checkbox
+                      SizedBox(
+                        width: 40,
+                        child: Text(""),
+                      ), // Align with Checkbox
                       Expanded(
-                        child: Text("Task", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        child: Text(
+                          "Task",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
-                      SizedBox(width: 150, child: Text("Interval", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
-                      SizedBox(width: 80, child: Text("Mode", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
+                      SizedBox(
+                        width: 150,
+                        child: Text(
+                          "Interval",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 80,
+                        child: Text(
+                          "Mode",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  const Divider(height: 20, thickness: 1, color: Color(0xFFE0E0E0)),
+                  const Divider(
+                    height: 20,
+                    thickness: 1,
+                    color: Color(0xFFE0E0E0),
+                  ),
 
                   // --- New Task Input Row ---
                   Row(
@@ -203,9 +241,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          await _selectTime(context, true); 
+                          await _selectTime(context, true);
+                          if (!mounted) return;
                           if (_startTime != null) {
                             await _selectTime(context, false);
+                            if (!mounted) return;
                           }
                         },
                         child: SizedBox(
@@ -213,14 +253,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
                           child: Text(
                             _formatInterval(),
                             style: TextStyle(
-                              color: (_startTime != null && _endTime != null) ? Colors.black : Colors.grey,
+                              color: (_startTime != null && _endTime != null)
+                                  ? Colors.black
+                                  : Colors.grey,
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
                             ),
                           ),
                         ),
                       ),
-                      // Mode Selector
+
                       SizedBox(
                         width: 80,
                         child: Row(
@@ -234,10 +276,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       ),
                     ],
                   ),
-                  const Divider(height: 20, thickness: 1, color: Color(0xFFE0E0E0)),
+                  const Divider(
+                    height: 20,
+                    thickness: 1,
+                    color: Color(0xFFE0E0E0),
+                  ),
 
-
-                  // --- Example Existing Task (Simulation) ---
                   Row(
                     children: [
                       // Completion Checkbox (Example)
@@ -253,7 +297,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       const Expanded(
                         child: Text(
                           "Water Tomato Field",
-                          style: TextStyle(fontSize: 16, decoration: TextDecoration.lineThrough, color: Colors.grey),
+                          style: TextStyle(
+                            fontSize: 16,
+                            decoration: TextDecoration.lineThrough,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                       // Time Interval
@@ -261,7 +309,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         width: 150,
                         child: Text(
                           "12:30 PM - 1:30 PM",
-                          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 16),
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                       // Mode Selector
@@ -286,12 +338,18 @@ class _AddTaskPageState extends State<AddTaskPage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF00A550),
             padding: const EdgeInsets.symmetric(vertical: 18),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             elevation: 5,
           ),
           child: const Text(
             'Save Task',
-            style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),

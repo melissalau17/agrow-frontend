@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'screens/WelcomePage.dart';
-import 'screens/LoginPage.dart';
-import 'screens/RegisterPage.dart';
-import 'screens/OTPVerificationPage.dart';
-import 'screens/SuccessPage.dart';
-import 'screens/DashboardPage.dart';
+import 'screens/welcome_page.dart';
+import 'screens/login_page.dart';
+import 'screens/register_page.dart';
+import 'screens/otp_verification_page.dart';
+import 'screens/success_page.dart';
+import 'screens/dashboard_page.dart';
 
 void main() {
   runApp(const MyApp());

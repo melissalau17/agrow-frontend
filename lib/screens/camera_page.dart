@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'CameraAnalyzingPage.dart';
+import 'camera_analyzing_page.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -61,9 +61,9 @@ class _CameraPageState extends State<CameraPage> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.white.withOpacity(0.05),
-                    Colors.white.withOpacity(0.3),
-                    Colors.white.withOpacity(0.05),
+                    Colors.white.withValues(alpha: 0.05),
+                    Colors.white.withValues(alpha: 0.3),
+                    Colors.white.withValues(alpha: 0.05),
                   ],
                 ),
               ),
@@ -78,11 +78,11 @@ class _CameraPageState extends State<CameraPage> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(30),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 10,
                     spreadRadius: 2,
                   ),
