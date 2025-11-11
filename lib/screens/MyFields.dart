@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:agrow/screens/AddFieldPage.dart';
 
-// Placeholder for the main navigation function (to be implemented in Scaffold/AppShell)
-// This simulates navigating to a specific field detail page.
 void navigateToFieldDetails(BuildContext context, String fieldName) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(content: Text('Navigating to $fieldName Details')),
   );
 }
 
-// Placeholder for navigation to the Add Field page.
+// Navigation to the Add Field page.
 void navigateToAddField(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute(
@@ -30,7 +29,7 @@ class ControlsPage extends StatelessWidget {
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF004D40), // Dark green for text
+            color: Color(0xFF004D40), 
           ),
         ),
         backgroundColor: Colors.white,
@@ -38,7 +37,6 @@ class ControlsPage extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              // Action for See All
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('See All Fields')),
               );
@@ -46,14 +44,13 @@ class ControlsPage extends StatelessWidget {
             child: const Text(
               'See All',
               style: TextStyle(
-                color: Color(0xFF00A550), // Green accent color
+                color: Color(0xFF00A550), 
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ),
         ],
-        // Removes the leading space usually reserved for the back button on root pages
         automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
@@ -113,7 +110,7 @@ class FieldCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
+              color: Colors.grey.withValues(alpha: 0.3),
               spreadRadius: 1,
               blurRadius: 5,
               offset: const Offset(0, 3),
@@ -122,7 +119,7 @@ class FieldCard extends StatelessWidget {
           image: DecorationImage(
             image: NetworkImage(imageUrl),
             fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.1), BlendMode.darken),
+            colorFilter: ColorFilter.mode(Colors.black.withValues(alpha: 0.1), BlendMode.darken),
           ),
         ),
         child: Stack(
@@ -185,7 +182,7 @@ class AddFieldButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
+              color: Colors.grey.withValues(alpha: 0.3),
               spreadRadius: 1,
               blurRadius: 5,
               offset: const Offset(0, 3),
@@ -196,7 +193,7 @@ class AddFieldButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
-              Icons.add_circle_outline, // Changed from '+' to a more visible icon
+              Icons.add_circle_outline,
               size: 50,
               color: Colors.grey,
             ),
@@ -211,24 +208,6 @@ class AddFieldButton extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-// Placeholder for the Add Field Page
-class AddFieldPage extends StatelessWidget {
-  const AddFieldPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add New Field'),
-        backgroundColor: const Color(0xFF00A550),
-      ),
-      body: const Center(
-        child: Text('Field Creation Form Goes Here'),
       ),
     );
   }

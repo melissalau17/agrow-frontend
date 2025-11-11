@@ -119,7 +119,7 @@ class _AnalyticsDetailPageState extends State<AnalyticsDetailPage> {
                     setState(() => waterOn = val);
                     // TODO: Send command to IOT backend here
                   },
-                  activeColor: const Color(0xFF00A550),
+                  activeThumbColor: const Color(0xFF00A550),
                 )
               ],
             ),
@@ -154,7 +154,7 @@ class _ConditionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),

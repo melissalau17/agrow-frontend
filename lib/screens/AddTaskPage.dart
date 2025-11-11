@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-// Defines the Task structure
 class Task {
   final String title;
   final TimeOfDay startTime;
   final TimeOfDay endTime;
-  final String mode; // "Manual" or "Automated"
+  final String mode; 
   final bool isCompleted;
 
   Task({
@@ -153,7 +152,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Colors.grey.withValues(alpha: 0.1),
                     spreadRadius: 2,
                     blurRadius: 5,
                     offset: const Offset(0, 3),
@@ -163,7 +162,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // --- Header Row ---
                   Row(
                     children: const [
                       SizedBox(width: 40, child: Text("")), // Align with Checkbox
@@ -203,12 +201,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
                           style: const TextStyle(fontSize: 16),
                         ),
                       ),
-                      // Time Interval Picker
                       GestureDetector(
                         onTap: () async {
-                          await _selectTime(context, true); // Select Start Time
+                          await _selectTime(context, true); 
                           if (_startTime != null) {
-                            await _selectTime(context, false); // Select End Time
+                            await _selectTime(context, false);
                           }
                         },
                         child: SizedBox(

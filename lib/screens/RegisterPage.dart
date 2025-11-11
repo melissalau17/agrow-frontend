@@ -181,20 +181,24 @@ class _RegisterPageState extends State<RegisterPage> {
                 style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             DropdownSearch<String>(
-              items: _locations,
+              items: (filter, infiniteScrollProps) async {
+                return _locations;
+              },
               selectedItem: _selectedLocation,
-              popupProps: const PopupProps.menu(
+              popupProps: PopupProps.menu(
                 showSearchBox: true,
                 searchFieldProps: TextFieldProps(
                   decoration: InputDecoration(
                     hintText: "Search your city...",
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ),
-              dropdownDecoratorProps: DropDownDecoratorProps(
-                dropdownSearchDecoration: InputDecoration(
+              decoratorProps: DropDownDecoratorProps(
+                decoration: InputDecoration(
                   hintText: "Enter your location",
                   hintStyle: const TextStyle(color: Colors.grey),
                   contentPadding:
@@ -208,6 +212,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderRadius: BorderRadius.circular(12),
                     borderSide:
                     const BorderSide(color: Color(0xFF00A550), width: 1.5),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide:
+                    const BorderSide(color: Color(0xFF007C3B), width: 2),
                   ),
                 ),
               ),
