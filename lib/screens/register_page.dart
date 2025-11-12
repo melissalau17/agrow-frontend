@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:dropdown_search/dropdown_search.dart';
+import '/widgets/province_dropdown.dart';
+import '/widgets/city_dropdown.dart';
+import '/widgets/district_dropdown.dart';
+import '/widgets/village_dropdown.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -17,17 +20,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-  String? _selectedLocation;
 
-  final List<String> _locations = [
-    'Jakarta, Indonesia',
-    'Bandung, Indonesia',
-    'Surabaya, Indonesia',
-    'Bali, Indonesia',
-    'Yogyakarta, Indonesia',
-    'Medan, Indonesia',
-    'Semarang, Indonesia',
-  ];
+  // Address state
+  String? _province, _provinceCode;
+  String? _city, _cityCode;
+  String? _district, _districtCode;
+  String? _village, _villageCode;
 
   @override
   Widget build(BuildContext context) {
@@ -40,20 +38,19 @@ class _RegisterPageState extends State<RegisterPage> {
           children: [
             // Header
             RichText(
-              text: const TextSpan(
-                style: TextStyle(
+              text: TextSpan(
+                style: const TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 28,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
                 children: [
-                  TextSpan(text: 'a'),
-                  TextSpan(
-                    text: 'Grow',
-                    style: TextStyle(color: Color(0xFF00A550)),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle,
+                    child: Image.asset('/images/agrow_logo.png', height: 40),
                   ),
-                  TextSpan(text: ' with Us!'),
+                  const TextSpan(text: ' with Us!'),
                 ],
               ),
             ),
@@ -61,8 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
             Row(
               children: [
-                const Text("Have an account? ",
-                    style: TextStyle(fontSize: 16)),
+                const Text("Have an account? ", style: TextStyle(fontSize: 16)),
                 GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(context, '/login');
@@ -86,8 +82,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("First name",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        "First name",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _firstNameController,
@@ -101,8 +99,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Last name",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        "Last name",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _lastNameController,
@@ -116,8 +116,10 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 16),
 
             // Phone number
-            const Text("Phone Number",
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              "Phone Number",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             TextField(
               controller: _phoneController,
@@ -127,8 +129,10 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 16),
 
             // Password
-            const Text("Password",
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              "Password",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             TextField(
               controller: _passwordController,
@@ -152,8 +156,10 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 16),
 
             // Confirm Password
-            const Text("Confirm password",
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              "Confirm password",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             TextField(
               controller: _confirmPasswordController,
@@ -176,56 +182,109 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             const SizedBox(height: 16),
 
-            // Searchable Dropdown
-            const Text("Enter location",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            DropdownSearch<String>(
-              items: (filter, infiniteScrollProps) async {
-                return _locations;
-              },
-              selectedItem: _selectedLocation,
-              popupProps: PopupProps.menu(
-                showSearchBox: true,
-                searchFieldProps: TextFieldProps(
-                  decoration: InputDecoration(
-                    hintText: "Search your city...",
-                    prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-              ),
-              decoratorProps: DropDownDecoratorProps(
-                decoration: InputDecoration(
-                  hintText: "Enter your location",
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                    const BorderSide(color: Color(0xFF00A550), width: 1.5),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                    const BorderSide(color: Color(0xFF00A550), width: 1.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                    const BorderSide(color: Color(0xFF007C3B), width: 2),
-                  ),
-                ),
-              ),
-              onChanged: (value) {
+            // Address Section Header
+            const Text(
+              "Location",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 16),
+
+            // Province Dropdown
+            ProvinceDropdown(
+              selectedValue: _province,
+              onChanged: (value, code) {
                 setState(() {
-                  _selectedLocation = value;
+                  _province = value;
+                  _provinceCode = code;
+                  // Reset child dropdowns
+                  _city = _cityCode = null;
+                  _district = _districtCode = null;
+                  _village = _villageCode = null;
                 });
               },
             ),
+            const SizedBox(height: 16),
+
+            // City Dropdown
+            CityDropdown(
+              selectedValue: _city,
+              provinceCode: _provinceCode,
+              onChanged: (value, code) {
+                setState(() {
+                  _city = value;
+                  _cityCode = code;
+                  // Reset child dropdowns
+                  _district = _districtCode = null;
+                  _village = _villageCode = null;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // District Dropdown
+            DistrictDropdown(
+              selectedValue: _district,
+              cityCode: _cityCode,
+              onChanged: (value, code) {
+                setState(() {
+                  _district = value;
+                  _districtCode = code;
+                  // Reset child dropdown
+                  _village = _villageCode = null;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // Village Dropdown
+            VillageDropdown(
+              selectedValue: _village,
+              districtCode: _districtCode,
+              onChanged: (value, code) {
+                setState(() {
+                  _village = value;
+                  _villageCode = code;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+
+            // Display complete address if all selected
+            if (_province != null &&
+                _city != null &&
+                _district != null &&
+                _village != null)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF00A550).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFF00A550).withValues(alpha: 0.3),
+                    width: 1.5,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.location_on,
+                      color: Color(0xFF007C3B),
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        "$_village, $_district, $_city, $_province",
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             const SizedBox(height: 32),
 
             // Register button
@@ -234,6 +293,26 @@ class _RegisterPageState extends State<RegisterPage> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
+                  // Validate all fields including address
+                  if (_province == null ||
+                      _city == null ||
+                      _district == null ||
+                      _village == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Please complete your address"),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  }
+
+                  // You can access all the data here:
+                  debugPrint('Province: $_province (Code: $_provinceCode)');
+                  debugPrint('City: $_city (Code: $_cityCode)');
+                  debugPrint('District: $_district (Code: $_districtCode)');
+                  debugPrint('Village: $_village (Code: $_villageCode)');
+
                   Navigator.pushNamed(context, '/otp');
                 },
                 style: ElevatedButton.styleFrom(
@@ -265,8 +344,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return InputDecoration(
       hintText: hint,
       hintStyle: const TextStyle(color: Colors.grey),
-      contentPadding:
-      const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: Color(0xFF00A550)),
@@ -277,8 +355,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide:
-        const BorderSide(color: Color(0xFF007C3B), width: 2),
+        borderSide: const BorderSide(color: Color(0xFF007C3B), width: 2),
       ),
     );
   }

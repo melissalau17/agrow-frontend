@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:agrow/screens/add_field_page.dart';
+import 'controls_detail_page.dart';
 
 void navigateToFieldDetails(BuildContext context, String fieldName) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text('Navigating to $fieldName Details')),
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => AnalyticsDetailPage(fieldName: fieldName),
+    ),
   );
 }
 
 void navigateToAddField(BuildContext context) {
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (context) => const AddFieldPage(),
-    ),
-  );
+  Navigator.of(
+    context,
+  ).push(MaterialPageRoute(builder: (context) => const AddFieldPage()));
 }
 
 class MyFieldsPage extends StatelessWidget {
@@ -33,23 +34,6 @@ class MyFieldsPage extends StatelessWidget {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        actions: [
-          TextButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('See All Fields')),
-              );
-            },
-            child: const Text(
-              'See All',
-              style: TextStyle(
-                color: Color(0xFF00A550),
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
         automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
@@ -58,22 +42,22 @@ class MyFieldsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             FieldCard(
-              imageUrl: 'https://placehold.co/600x400/D4F1C5/000000?text=Chili+Field+LIVE',
+              imageUrl:
+                  'https://placehold.co/600x400/D4F1C5/000000?text=Chili+Field+LIVE',
               fieldName: 'Chili Field',
               isLive: true,
               onTap: () => navigateToFieldDetails(context, 'Chili Field'),
             ),
             const SizedBox(height: 20),
             FieldCard(
-              imageUrl: 'https://placehold.co/600x400/D4F1C5/000000?text=Tomato+Field+LIVE',
+              imageUrl:
+                  'https://placehold.co/600x400/D4F1C5/000000?text=Tomato+Field+LIVE',
               fieldName: 'Tomato Field',
               isLive: true,
               onTap: () => navigateToFieldDetails(context, 'Tomato Field'),
             ),
             const SizedBox(height: 20),
-            AddFieldButton(
-              onTap: () => navigateToAddField(context),
-            ),
+            AddFieldButton(onTap: () => navigateToAddField(context)),
           ],
         ),
       ),
@@ -127,7 +111,10 @@ class FieldCard extends StatelessWidget {
                 top: 10,
                 left: 10,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(8),
@@ -165,10 +152,7 @@ class FieldCard extends StatelessWidget {
 class AddFieldButton extends StatelessWidget {
   final VoidCallback onTap;
 
-  const AddFieldButton({
-    required this.onTap,
-    super.key,
-  });
+  const AddFieldButton({required this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -191,11 +175,7 @@ class AddFieldButton extends StatelessWidget {
         child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(
-              Icons.add_circle_outline,
-              size: 50,
-              color: Colors.grey,
-            ),
+            Icon(Icons.add_circle_outline, size: 50, color: Colors.grey),
             SizedBox(height: 10),
             Text(
               'Add Field',

@@ -5,8 +5,11 @@ import 'screens/register_page.dart';
 import 'screens/otp_verification_page.dart';
 import 'screens/success_page.dart';
 import 'screens/dashboard_page.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
+
   runApp(const MyApp());
 }
 

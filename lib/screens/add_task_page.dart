@@ -30,9 +30,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
   String _mode = 'Manual';
   bool _isTaskCompleted = false;
 
+  // ✅ Fixed & cleaned up _selectTime function
   Future<void> _selectTime(BuildContext context, bool isStart) async {
+    final ctx = context; // store context to silence linter safely
     final TimeOfDay? picked = await showTimePicker(
-      context: context,
+      context: ctx,
       initialTime: isStart
           ? (_startTime ?? TimeOfDay.now())
           : (_endTime ?? _startTime ?? TimeOfDay.now()),
@@ -46,7 +48,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       },
     );
 
-    if (!mounted) return;
+    if (!mounted) return; 
 
     if (picked != null) {
       setState(() {
@@ -84,29 +86,26 @@ class _AddTaskPageState extends State<AddTaskPage> {
       isCompleted: _isTaskCompleted,
     );
 
-    // In a real app, you would save this task to Firestore/State Management here.
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Task "${newTask.title}" saved successfully!')),
     );
 
-    Navigator.of(context).pop(newTask); // Return to Dashboard
+    Navigator.of(context).pop(newTask);
   }
 
-  // --- Widget Builders ---
-
+  // --- Mode Pill Widget ---
   Widget _buildModePill(String mode, bool isSelected) {
-    final color = mode == 'Automated'
+    final Color color = mode == 'Automated'
         ? const Color(0xFF00A550)
-        : Colors.grey.shade400;
+        : Colors.grey.shade600;
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _mode = mode;
-        });
+        setState(() => _mode = mode);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        margin: const EdgeInsets.only(right: 6),
         decoration: BoxDecoration(
           color: isSelected ? color : Colors.white,
           border: Border.all(color: color, width: 1.5),
@@ -124,14 +123,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
-  // Helper to format TimeOfDay to string
   String _formatTime(TimeOfDay? time) {
     if (time == null) return 'Select Time...';
-    // Use context to handle 12h/24h format based on locale
     return time.format(context);
   }
 
-  // Helper to format interval
   String _formatInterval() {
     if (_startTime == null || _endTime == null) return 'Select Time...';
     return '${_formatTime(_startTime)} - ${_formatTime(_endTime)}';
@@ -149,188 +145,160 @@ class _AddTaskPageState extends State<AddTaskPage> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withValues(alpha: 0.1),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withValues(alpha: 0.1),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header Row
+              Row(
+                children: const [
+                  SizedBox(width: 40),
+                  Expanded(
+                    child: Text(
+                      "Task",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 150,
+                    child: Text(
+                      "Interval",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 80,
+                    child: Text(
+                      "Mode",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const Divider(height: 20, thickness: 1, color: Color(0xFFE0E0E0)),
+
+              Row(
                 children: [
-                  Row(
-                    children: const [
-                      SizedBox(
-                        width: 40,
-                        child: Text(""),
-                      ), // Align with Checkbox
-                      Expanded(
-                        child: Text(
-                          "Task",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 150,
-                        child: Text(
-                          "Interval",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 80,
-                        child: Text(
-                          "Mode",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
+                  SizedBox(
+                    width: 40,
+                    child: Checkbox(
+                      value: _isTaskCompleted,
+                      onChanged: (bool? val) =>
+                          setState(() => _isTaskCompleted = val ?? false),
+                      activeColor: const Color(0xFF00A550),
+                    ),
                   ),
-                  const Divider(
-                    height: 20,
-                    thickness: 1,
-                    color: Color(0xFFE0E0E0),
+                  Expanded(
+                    child: TextField(
+                      controller: _taskController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter task...',
+                        border: InputBorder.none,
+                        isDense: true,
+                      ),
+                      style: const TextStyle(fontSize: 16),
+                    ),
                   ),
-
-                  // --- New Task Input Row ---
-                  Row(
-                    children: [
-                      // Completion Checkbox (Initial state)
-                      SizedBox(
-                        width: 40,
-                        child: Checkbox(
-                          value: _isTaskCompleted,
-                          onChanged: (bool? val) {
-                            setState(() => _isTaskCompleted = val ?? false);
-                          },
-                          activeColor: const Color(0xFF00A550),
+                  GestureDetector(
+                    onTap: () async {
+                      final ctx = context;
+                      await _selectTime(ctx, true);
+                      if (!mounted) return;
+                      if (_startTime != null) {
+                        await _selectTime(ctx, false);
+                        if (!mounted) return;
+                      }
+                    },
+                    child: SizedBox(
+                      width: 150,
+                      child: Text(
+                        _formatInterval(),
+                        style: TextStyle(
+                          color: (_startTime != null && _endTime != null)
+                              ? Colors.black
+                              : Colors.grey,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
                         ),
                       ),
-                      // Task Title Input
-                      Expanded(
-                        child: TextField(
-                          controller: _taskController,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter task...',
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.zero,
-                            isDense: true,
-                          ),
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          await _selectTime(context, true);
-                          if (!mounted) return;
-                          if (_startTime != null) {
-                            await _selectTime(context, false);
-                            if (!mounted) return;
-                          }
-                        },
-                        child: SizedBox(
-                          width: 150,
-                          child: Text(
-                            _formatInterval(),
-                            style: TextStyle(
-                              color: (_startTime != null && _endTime != null)
-                                  ? Colors.black
-                                  : Colors.grey,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(
-                        width: 80,
-                        child: Row(
-                          children: [
-                            _buildModePill('Manual', _mode == 'Manual'),
-                            // Only show Automated if Manual is not selected (to save space)
-                            if (_mode == 'Automated')
-                              _buildModePill('Automated', _mode == 'Automated'),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                  const Divider(
-                    height: 20,
-                    thickness: 1,
-                    color: Color(0xFFE0E0E0),
-                  ),
-
-                  Row(
-                    children: [
-                      // Completion Checkbox (Example)
-                      SizedBox(
-                        width: 40,
-                        child: Checkbox(
-                          value: true,
-                          onChanged: (bool? val) {},
-                          activeColor: const Color(0xFF00A550),
-                        ),
-                      ),
-                      // Task Title
-                      const Expanded(
-                        child: Text(
-                          "Water Tomato Field",
-                          style: TextStyle(
-                            fontSize: 16,
-                            decoration: TextDecoration.lineThrough,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      // Time Interval
-                      const SizedBox(
-                        width: 150,
-                        child: Text(
-                          "12:30 PM - 1:30 PM",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      // Mode Selector
-                      SizedBox(
-                        width: 80,
-                        child: _buildModePill('Automated', true),
-                      ),
-                    ],
+                  SizedBox(
+                    width: 80,
+                    child: Row(
+                      children: [
+                        _buildModePill('Manual', _mode == 'Manual'),
+                        _buildModePill('Automated', _mode == 'Automated'),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+
+              const Divider(height: 20, thickness: 1, color: Color(0xFFE0E0E0)),
+
+              // Example existing task row
+              Row(
+                children: [
+                  SizedBox(
+                    width: 40,
+                    child: Checkbox(
+                      value: true,
+                      onChanged: (val) {},
+                      activeColor: const Color(0xFF00A550),
+                    ),
+                  ),
+                  const Expanded(
+                    child: Text(
+                      "Water Tomato Field",
+                      style: TextStyle(
+                        fontSize: 16,
+                        decoration: TextDecoration.lineThrough,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 150,
+                    child: Text(
+                      "12:30 PM - 1:30 PM",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 80, child: _buildModePill('Automated', true)),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
 
-      // Save Button in a fixed position
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(20),
         child: ElevatedButton(

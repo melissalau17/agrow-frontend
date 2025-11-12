@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         timer.cancel();
         setState(() {
-          _isOtpSent = false; // back to inactive when done
+          _isOtpSent = false; 
         });
       }
     });
@@ -71,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
             RichText(
               text: TextSpan(
                 style: TextStyle(

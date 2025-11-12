@@ -16,45 +16,39 @@ class CropDropdown extends StatefulWidget {
 }
 
 class _CropDropdownState extends State<CropDropdown> {
-  String? _hoveredValue;
 
   @override
   Widget build(BuildContext context) {
-    final crops = [
-      'Brown rice, rice',
-      'Tomato',
-      'Chili',
-      'Corn',
-    ];
+    final crops = ['Brown rice, rice', 'Tomato', 'Chili', 'Corn'];
 
     return DropdownButtonHideUnderline(
       child: DropdownButton2<String>(
         isExpanded: true,
         value: widget.selectedValue,
         items: crops.map((crop) {
-          final isHovered = crop == _hoveredValue;
           final isSelected = crop == widget.selectedValue;
 
           return DropdownMenuItem<String>(
             value: crop,
             child: MouseRegion(
-              onEnter: (_) => setState(() => _hoveredValue = crop),
-              onExit: (_) => setState(() => _hoveredValue = null),
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 14,
+                ),
                 decoration: BoxDecoration(
-                  color: isHovered
-                      ? const Color(0xFFB9F6CA) // only on hover
-                      : Colors.transparent,
+                  color: Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   crop,
                   style: TextStyle(
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.w600
+                        : FontWeight.normal,
                     color: isSelected
-                        ? const Color(0xFF004D40) // darker for selected text
+                        ? const Color(0xFF004D40) 
                         : Colors.black87,
                   ),
                 ),
@@ -77,14 +71,10 @@ class _CropDropdownState extends State<CropDropdown> {
         dropdownStyleData: DropdownStyleData(
           maxHeight: 240,
           offset: const Offset(0, -4),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
         ),
 
-        menuItemStyleData: const MenuItemStyleData(
-          padding: EdgeInsets.zero,
-        ),
+        menuItemStyleData: const MenuItemStyleData(padding: EdgeInsets.zero),
       ),
     );
   }
