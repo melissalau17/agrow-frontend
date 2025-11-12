@@ -1,12 +1,13 @@
+import 'package:agrow/screens/edit_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-// Import necessary local components and pages for navigation
 import '/widgets/bottom_nav.dart';
 import 'my_fields.dart';
 import 'camera_page.dart';
-import 'controls_detail_page.dart';
 import 'add_field_page.dart';
+import 'add_task_page.dart';
+import 'analytics_page.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -16,12 +17,9 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  // Index 2 is reserved for the FloatingActionButton (Camera)
-  int _selectedIndex = 0; // 0: Home, 1: Analytics, 3: Controls, 4: Settings
+  int _selectedIndex = 0; 
 
-  // --- Tab Tapping Logic ---
   void _onItemTapped(int index) {
-    // If the camera button (index 2) is tapped, navigate to the CameraPage route
     if (index == 2) {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const CameraPage()),
@@ -29,21 +27,15 @@ class _DashboardPageState extends State<DashboardPage> {
       return;
     }
 
-    // For all other tabs, update the selected index
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  // --- Widget Builders for Home Content ---
-
-  // Home Screen Content Builder (The rich UI provided by the user)
   Widget _buildHomeContent(BuildContext context) {
     final currentDate = DateFormat('EEEE, d MMMM yyyy').format(DateTime.now());
 
-    // Navigation actions specific to the Home Content
-    void seeAllFields() => _onItemTapped(3); // Switch to Controls/My Fields tab
-
+    void seeAllFields() => _onItemTapped(3);
     void navigateToAddFieldPage() {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const AddFieldPage()),
@@ -52,7 +44,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
     void navigateToAnalyticsDetail() {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const AnalyticsDetailPage()),
+        MaterialPageRoute(builder: (context) => const AnalyticsPage()),
       );
     }
 
@@ -62,7 +54,6 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -79,13 +70,9 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             const SizedBox(height: 12),
 
-            // Greeting
             const Text(
               "Good morning, User",
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
             ),
             Text(
               currentDate,
@@ -96,7 +83,6 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             const SizedBox(height: 16),
 
-            // Weather Card
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -120,8 +106,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 children: [
                   const Row(
                     children: [
-                      Icon(Icons.location_on_outlined,
-                          color: Colors.black54),
+                      Icon(Icons.location_on_outlined, color: Colors.black54),
                       SizedBox(width: 6),
                       Text("Jakarta, Indonesia",
                           style: TextStyle(fontWeight: FontWeight.w500)),
@@ -136,34 +121,10 @@ class _DashboardPageState extends State<DashboardPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
-                      Column(
-                        children: [
-                          Text("🌡️", style: TextStyle(fontSize: 24)),
-                          Text("30°C", style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text("Soil Temp", style: TextStyle(fontSize: 12)),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text("💧", style: TextStyle(fontSize: 24)),
-                          Text("85%", style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text("Humidity", style: TextStyle(fontSize: 12)),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text("🌬️", style: TextStyle(fontSize: 24)),
-                          Text("5 km/h", style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text("Wind", style: TextStyle(fontSize: 12)),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text("🌧️", style: TextStyle(fontSize: 24)),
-                          Text("55%", style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text("Precip.", style: TextStyle(fontSize: 12)),
-                        ],
-                      ),
+                      _WeatherItem(icon: "🌡️", value: "30°C", label: "Soil Temp"),
+                      _WeatherItem(icon: "💧", value: "85%", label: "Humidity"),
+                      _WeatherItem(icon: "🌬️", value: "5 km/h", label: "Wind"),
+                      _WeatherItem(icon: "🌧️", value: "55%", label: "Precip."),
                     ],
                   ),
                 ],
@@ -171,15 +132,13 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             const SizedBox(height: 24),
 
-            // My Fields Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text("My Fields:",
-                    style:
-                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 GestureDetector(
-                  onTap: seeAllFields, // Switch to Controls Tab (index 3)
+                  onTap: seeAllFields,
                   child: const Text("See All",
                       style: TextStyle(
                           color: Color(0xFF00A550),
@@ -198,7 +157,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     image: "https://i.ibb.co/nkY6v5k/chili-field.jpg",
                     name: "Chili Field",
                     size: "1.2 Ha",
-                    onTap: navigateToAnalyticsDetail, // Navigates to detail page
+                    onTap: navigateToAnalyticsDetail,
                   ),
                   const SizedBox(width: 12),
                   _buildFieldCard(
@@ -206,10 +165,10 @@ class _DashboardPageState extends State<DashboardPage> {
                     image: "https://i.ibb.co/tm6jsQp/tomato-field.jpg",
                     name: "Tomato Field",
                     size: "1.5 Ha",
-                    onTap: navigateToAnalyticsDetail, // Navigates to detail page
+                    onTap: navigateToAnalyticsDetail,
                   ),
                   const SizedBox(width: 12),
-                  _addCard("Add field", navigateToAddFieldPage), // Navigates to AddFieldPage
+                  _addCard("Add field", navigateToAddFieldPage),
                 ],
               ),
             ),
@@ -248,8 +207,7 @@ class _DashboardPageState extends State<DashboardPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
                 Text("My Tasks:",
-                    style:
-                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 Text("See All",
                     style: TextStyle(
                         color: Color(0xFF00A550),
@@ -262,15 +220,15 @@ class _DashboardPageState extends State<DashboardPage> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _buildTaskCard("7:30 AM", "Water Chili Field", "On Progress",
-                      const Color(0xFF00A550)),
+                  _buildTaskCard(
+                      "7:30 AM", "Water Chili Field", "On Progress", const Color(0xFF00A550)),
                   const SizedBox(width: 12),
-                  _buildTaskCard("8:30 AM", "Water Tomato Field", "Not Started",
-                      const Color(0xFFA9E9C4)),
+                  _buildTaskCard(
+                      "8:30 AM", "Water Tomato Field", "Not Started", const Color(0xFFA9E9C4)),
                   const SizedBox(width: 12),
                   _addCard("Add task", () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Navigate to Add Task')),
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const AddTaskPage()),
                     );
                   }),
                 ],
@@ -281,8 +239,6 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
     );
   }
-
-  // --- Helper Widgets ---
 
   Widget _buildFieldCard({
     required String status,
@@ -308,8 +264,7 @@ class _DashboardPageState extends State<DashboardPage> {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(16)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                   child: Image.network(image,
                       height: 100, width: double.infinity, fit: BoxFit.cover),
                 ),
@@ -317,8 +272,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   top: 8,
                   left: 8,
                   child: Container(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: const Color(0xFF00A550),
                       borderRadius: BorderRadius.circular(8),
@@ -356,12 +310,55 @@ class _DashboardPageState extends State<DashboardPage> {
                       child: const Icon(Icons.arrow_forward,
                           color: Colors.white, size: 20),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTaskCard(
+      String time, String title, String status, Color statusColor) {
+    return Container(
+      width: 160,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(time,
+              style: const TextStyle(
+                  color: Color(0xFF00A550),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14)),
+          const SizedBox(height: 4),
+          Text(title,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: statusColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              status,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -391,88 +388,54 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildTaskCard(
-      String time, String title, String status, Color statusColor) {
-    return Container(
-      width: 160,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(time,
-              style: const TextStyle(
-                  color: Color(0xFF00A550),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14)),
-          const SizedBox(height: 4),
-          Text(title,
-              style:
-              const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: statusColor,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              status,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // --- Main Widget Options List ---
-
-  late final List<Widget> _widgetOptions = <Widget>[
-    // 0: Home Content
-    _buildHomeContent(context),
-    // 1: Analytics
-    const Center(child: Text('Analytics Dashboard Content (Full Page)', style: TextStyle(fontSize: 24, color: Colors.grey))),
-    // 2: Camera (Placeholder - navigation handled separately)
-    const SizedBox.shrink(),
-    // 3: Controls (My Fields Page)
-    const ControlsPage(),
-    // 4: Settings
-    const Center(child: Text('Settings Content', style: TextStyle(fontSize: 24, color: Colors.grey))),
-  ];
-
-  // --- Main Build Method ---
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // The body displays the content of the selected tab
-      backgroundColor: const Color(0xFFF9FFF8),
-      body: _widgetOptions.elementAt(_selectedIndex),
+    final List<Widget> widgetOptions = [
+      _buildHomeContent(context),
+      const AnalyticsPage(), 
+      const SizedBox.shrink(),
+      const MyFieldsPage(),
+      const EditProfilePage(),
+    ];
 
-      // Floating Action Button (The raised camera button)
+    return Scaffold(
+      backgroundColor: const Color(0xFFF9FFF8),
+      body: widgetOptions[_selectedIndex],
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF00A550),
         shape: const CircleBorder(),
-        elevation: 8, // Add elevation for the raised effect
-        onPressed: () => _onItemTapped(2), // Camera is index 2
+        elevation: 8,
+        onPressed: () => _onItemTapped(2),
         child: const Icon(Icons.camera_alt, color: Colors.white, size: 30),
       ),
-
-      // Positioning the FAB to be docked in the center
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-      // Custom Bottom Navigation Bar (BottomAppBar structure)
       bottomNavigationBar: BottomNav(
         currentIndex: _selectedIndex,
         onTabTapped: _onItemTapped,
       ),
+    );
+  }
+}
+
+class _WeatherItem extends StatelessWidget {
+  final String icon;
+  final String value;
+  final String label;
+
+  const _WeatherItem({
+    required this.icon,
+    required this.value,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(icon, style: const TextStyle(fontSize: 24)),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(label, style: const TextStyle(fontSize: 12)),
+      ],
     );
   }
 }

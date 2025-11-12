@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:pinput/pinput.dart'; // for OTP input
+import 'package:pinput/pinput.dart';
+import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +19,49 @@ class _LoginPageState extends State<LoginPage> {
   final _phoneController = TextEditingController();
   final _otpController = TextEditingController();
 
+  // OTP countdown logic
+  Timer? _timer;
+  int _remainingSeconds = 0;
+  bool _isOtpSent = false;
+
+  void _startCountdown() {
+    setState(() {
+      _isOtpSent = true;
+      _remainingSeconds = 180; // 3 minutes
+    });
+
+    _timer?.cancel();
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_remainingSeconds > 0) {
+        setState(() {
+          _remainingSeconds--;
+        });
+      } else {
+        timer.cancel();
+        setState(() {
+          _isOtpSent = false; // back to inactive when done
+        });
+      }
+    });
+  }
+
+  String _formatTime(int seconds) {
+    final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
+    final secs = (seconds % 60).toString().padLeft(2, '0');
+    return "$minutes:$secs";
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _phoneController.dispose();
+    _otpController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             // Header
             RichText(
-              text: const TextSpan(
+              text: TextSpan(
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 28,
@@ -36,10 +81,16 @@ class _LoginPageState extends State<LoginPage> {
                   fontWeight: FontWeight.bold,
                 ),
                 children: [
-                  TextSpan(text: 'Login to '),
                   TextSpan(
-                    text: 'aGrow',
-                    style: TextStyle(color: Color(0xFF00A550)),
+                    text: 'Login to ',
+                    style: TextStyle(color: Colors.black)
+                  ),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle,
+                    child: Image.asset(
+                      '/images/agrow_logo.png', 
+                      height: 30, // adjust as needed
+                    ),
                   ),
                 ],
               ),
@@ -52,7 +103,12 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(fontSize: 16),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const RegisterPage()),
+                    );
+                  },
                   child: const Text(
                     "Sign Up",
                     style: TextStyle(
@@ -65,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 32),
 
-            // AnimatedSwitcher handles smooth fade transitions
+            // Smooth switch between Email/Phone login
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 400),
               switchInCurve: Curves.easeInOut,
@@ -155,9 +211,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // ----------------------------
-  // EMAIL LOGIN FORM
-  // ----------------------------
   Widget _buildEmailLoginForm() {
     return Column(
       key: const ValueKey('emailLogin'),
@@ -195,9 +248,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // ----------------------------
-  // PHONE LOGIN FORM
-  // ----------------------------
   Widget _buildPhoneLoginForm() {
     return Column(
       key: const ValueKey('phoneLogin'),
@@ -237,16 +287,16 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(width: 8),
             Column(
               children: [
-                const Text(
-                  "02:59",
+                Text(
+                  _isOtpSent ? _formatTime(_remainingSeconds) : "03:00",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black54,
+                    color: _isOtpSent ? Colors.black : Colors.black54,
                   ),
                 ),
                 const SizedBox(height: 6),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _isOtpSent ? null : _startCountdown,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF00A550),
                     shape: RoundedRectangleBorder(
@@ -265,14 +315,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // ----------------------------
-  // REUSABLE DECORATION
-  // ----------------------------
   InputDecoration _buildInputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,
       contentPadding:
-      const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: Color(0xFF00A550)),
@@ -284,7 +331,7 @@ class _LoginPageState extends State<LoginPage> {
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide:
-        const BorderSide(color: Color(0xFF007C3B), width: 2),
+            const BorderSide(color: Color(0xFF007C3B), width: 2),
       ),
     );
   }

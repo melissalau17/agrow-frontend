@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-class CropDropdown extends StatelessWidget {
+class CropDropdown extends StatefulWidget {
   final String selectedValue;
   final ValueChanged<String> onChanged;
 
@@ -10,6 +10,13 @@ class CropDropdown extends StatelessWidget {
     required this.selectedValue,
     required this.onChanged,
   });
+
+  @override
+  State<CropDropdown> createState() => _CropDropdownState();
+}
+
+class _CropDropdownState extends State<CropDropdown> {
+  String? _hoveredValue;
 
   @override
   Widget build(BuildContext context) {
@@ -23,28 +30,39 @@ class CropDropdown extends StatelessWidget {
     return DropdownButtonHideUnderline(
       child: DropdownButton2<String>(
         isExpanded: true,
-        value: selectedValue,
+        value: widget.selectedValue,
         items: crops.map((crop) {
-          final isSelected = crop == selectedValue;
-          return DropdownMenuItem(
+          final isHovered = crop == _hoveredValue;
+          final isSelected = crop == widget.selectedValue;
+
+          return DropdownMenuItem<String>(
             value: crop,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
-              decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFB9F6CA) : Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                crop,
-                style: TextStyle(
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            child: MouseRegion(
+              onEnter: (_) => setState(() => _hoveredValue = crop),
+              onExit: (_) => setState(() => _hoveredValue = null),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+                decoration: BoxDecoration(
+                  color: isHovered
+                      ? const Color(0xFFB9F6CA) // only on hover
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  crop,
+                  style: TextStyle(
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    color: isSelected
+                        ? const Color(0xFF004D40) // darker for selected text
+                        : Colors.black87,
+                  ),
                 ),
               ),
             ),
           );
         }).toList(),
-        onChanged: (value) => onChanged(value!),
+        onChanged: (value) => widget.onChanged(value!),
 
         // Button Appearance
         buttonStyleData: ButtonStyleData(
@@ -56,7 +74,6 @@ class CropDropdown extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
         ),
 
-        // Dropdown Container Style
         dropdownStyleData: DropdownStyleData(
           maxHeight: 240,
           offset: const Offset(0, -4),

@@ -15,7 +15,6 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F9F4),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -62,7 +61,6 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
             ),
             const SizedBox(height: 12),
 
-            // Harvest time
             _bigCard(
               title: 'Harvest time (est)',
               value: '12 weeks',
@@ -79,7 +77,6 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
             ),
             const SizedBox(height: 16),
 
-            // 2x2 grid of characteristics
             Wrap(
               spacing: 12,
               runSpacing: 12,

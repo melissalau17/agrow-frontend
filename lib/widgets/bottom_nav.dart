@@ -12,19 +12,14 @@ class BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // We use a BottomAppBar to create the space for the FloatingActionButton
-    // and hold the four other icons.
     return BottomAppBar(
       color: Colors.white,
-      // Gives the curved edge effect above the AppBar
       shape: const AutomaticNotchedShape(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
-        // Ensures the FAB notch is centered
         CircleBorder(),
       ),
-      // Set the elevation to 5.0 for a subtle shadow matching the image
       elevation: 5.0,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),

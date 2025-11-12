@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -16,8 +17,9 @@ class _WelcomePageState extends State<WelcomePage> {
       body: Stack(
         fit: StackFit.expand,
         children: [
+          // Background Image
           Image.asset(
-            '/images/agrow_bg.jpg',
+            '/images/agrow_bg.jpg', // Ensure path is correct
             fit: BoxFit.cover,
           ),
 
@@ -34,47 +36,37 @@ class _WelcomePageState extends State<WelcomePage> {
             ),
           ),
 
-          // Content overlay
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
               child: Column(
                 children: [
-                  // Logo and Tagline at the top
-                  const SizedBox(height: 60),
+                  const SizedBox(height: 20),
+
                   RichText(
-                    text: const TextSpan(
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 56,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 2,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black26,
-                            offset: Offset(2, 2),
-                            blurRadius: 8,
-                          ),
-                        ],
-                      ),
+                    text: TextSpan(
                       children: [
-                        TextSpan(text: 'a'),
-                        TextSpan(
-                          text: 'Grow',
-                          style: TextStyle(color: Color(0xFF6FE18A)),
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.baseline,
+                          baseline: TextBaseline.alphabetic,
+                          child: Image.asset(
+                            '/images/agrow_white_logo.png',
+                            height: 60,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 8),
+
+                  const SizedBox(height: 7),
+
                   const Text(
                     'Smart Solution for Farmers',
                     style: TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
                       letterSpacing: 1,
                       shadows: [
                         Shadow(
@@ -88,38 +80,34 @@ class _WelcomePageState extends State<WelcomePage> {
 
                   const Spacer(),
 
-                  // Arrow button at the bottom
+                  // ARROW BUTTON
                   GestureDetector(
-                    onTapDown: (_) {
-                      setState(() {
-                        _isPressed = true;
-                      });
-                    },
+                    onTapDown: (_) => setState(() => _isPressed = true),
                     onTapUp: (_) {
-                      setState(() {
-                        _isPressed = false;
-                      });
-                      Navigator.pushNamed(context, '/onboarding');
+                      setState(() => _isPressed = false);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
+                      );
                     },
-                    onTapCancel: () {
-                      setState(() {
-                        _isPressed = false;
-                      });
-                    },
+                    onTapCancel: () => setState(() => _isPressed = false),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
+                      padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: LinearGradient(
                           colors: _isPressed
                               ? [
-                            const Color(0xFF0E8037), // Dark green (pressed)
-                            const Color(0xFF056C2F),
-                          ]
+                                  Color(0xFF0E8037), // Dark green
+                                  Color(0xFF056C2F),
+                                ]
                               : [
-                            const Color(0xFF6FE18A), // Light green (normal)
-                            const Color(0xFF3CC766),
-                          ],
+                                  Color(0xFF6FE18A), // Light green
+                                  Color(0xFF3CC766),
+                                ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
@@ -131,7 +119,6 @@ class _WelcomePageState extends State<WelcomePage> {
                           ),
                         ],
                       ),
-                      padding: const EdgeInsets.all(24.0),
                       child: const Icon(
                         Icons.arrow_forward,
                         color: Colors.white,
@@ -139,6 +126,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 40),
                 ],
               ),

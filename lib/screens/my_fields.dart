@@ -7,7 +7,6 @@ void navigateToFieldDetails(BuildContext context, String fieldName) {
   );
 }
 
-// Navigation to the Add Field page.
 void navigateToAddField(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute(
@@ -16,8 +15,8 @@ void navigateToAddField(BuildContext context) {
   );
 }
 
-class ControlsPage extends StatelessWidget {
-  const ControlsPage({super.key});
+class MyFieldsPage extends StatelessWidget {
+  const MyFieldsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class ControlsPage extends StatelessWidget {
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF004D40), 
+            color: Color(0xFF004D40),
           ),
         ),
         backgroundColor: Colors.white,
@@ -44,7 +43,7 @@ class ControlsPage extends StatelessWidget {
             child: const Text(
               'See All',
               style: TextStyle(
-                color: Color(0xFF00A550), 
+                color: Color(0xFF00A550),
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
@@ -58,7 +57,6 @@ class ControlsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            // First Field Card
             FieldCard(
               imageUrl: 'https://placehold.co/600x400/D4F1C5/000000?text=Chili+Field+LIVE',
               fieldName: 'Chili Field',
@@ -66,7 +64,6 @@ class ControlsPage extends StatelessWidget {
               onTap: () => navigateToFieldDetails(context, 'Chili Field'),
             ),
             const SizedBox(height: 20),
-            // Second Field Card
             FieldCard(
               imageUrl: 'https://placehold.co/600x400/D4F1C5/000000?text=Tomato+Field+LIVE',
               fieldName: 'Tomato Field',
@@ -74,7 +71,6 @@ class ControlsPage extends StatelessWidget {
               onTap: () => navigateToFieldDetails(context, 'Tomato Field'),
             ),
             const SizedBox(height: 20),
-            // Add Field Button
             AddFieldButton(
               onTap: () => navigateToAddField(context),
             ),
@@ -85,7 +81,6 @@ class ControlsPage extends StatelessWidget {
   }
 }
 
-// Widget for displaying individual field cards
 class FieldCard extends StatelessWidget {
   final String imageUrl;
   final String fieldName;
@@ -119,7 +114,10 @@ class FieldCard extends StatelessWidget {
           image: DecorationImage(
             image: NetworkImage(imageUrl),
             fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(Colors.black.withValues(alpha: 0.1), BlendMode.darken),
+            colorFilter: ColorFilter.mode(
+              Colors.black.withValues(alpha: 0.1),
+              BlendMode.darken,
+            ),
           ),
         ),
         child: Stack(
@@ -136,7 +134,11 @@ class FieldCard extends StatelessWidget {
                   ),
                   child: const Text(
                     'LIVE',
-                    style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -149,9 +151,7 @@ class FieldCard extends StatelessWidget {
                   color: Colors.white,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(blurRadius: 5, color: Colors.black54)
-                  ],
+                  shadows: [Shadow(blurRadius: 5, color: Colors.black54)],
                 ),
               ),
             ),
@@ -162,7 +162,6 @@ class FieldCard extends StatelessWidget {
   }
 }
 
-// Widget for the 'Add Field' button
 class AddFieldButton extends StatelessWidget {
   final VoidCallback onTap;
 
@@ -178,7 +177,7 @@ class AddFieldButton extends StatelessWidget {
       child: Container(
         height: 180,
         decoration: BoxDecoration(
-          color: Colors.grey.shade200, // Light grey background
+          color: Colors.grey.shade200,
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(

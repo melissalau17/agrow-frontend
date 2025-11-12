@@ -14,22 +14,22 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
   @override
   void initState() {
     super.initState();
-    // Simulate AI analysis delay and then navigate to results
     _startAnalysis();
   }
 
   Future<void> _startAnalysis() async {
-    await Future.delayed(const Duration(seconds: 3)); // Simulate 3 seconds of analysis
+    await Future.delayed(const Duration(seconds: 3)); 
+
     if (mounted) {
+      const String detectedDiseaseName = "Tomato Early Blight"; 
+      const int healthScore = 87;
+
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => AnalysisResultsPage(
             analyzedImageUrl: widget.capturedImageUrl,
-            cropHealthPercentage: 87, // Example data
-            recommendations: const [
-              "Make sure to water the plant daily to maintain its quality.",
-              "Make sure the nutrients are adequate to ensure growth.",
-            ],
+            detectedDiseaseName: detectedDiseaseName,
+            cropHealthPercentage: healthScore,
           ),
         ),
       );
@@ -39,7 +39,7 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF4FAF0), // Light background
+      backgroundColor: const Color(0xFFF4FAF0), 
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -74,8 +74,9 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
                 ),
               ),
             ),
+
             const SizedBox(height: 30),
-            // The green circular loading indicator from Image 2
+
             const SizedBox(
               width: 30,
               height: 30,
@@ -84,7 +85,9 @@ class _AnalyzingPageState extends State<AnalyzingPage> {
                 strokeWidth: 3,
               ),
             ),
+
             const SizedBox(height: 20),
+
             const Text(
               'Analyzing...',
               style: TextStyle(fontSize: 18, color: Colors.grey),
